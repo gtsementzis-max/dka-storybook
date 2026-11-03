@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="An illustrated storybook for kids with type 1 diabetes about how high blood sugar leads to DKA, and how insulin, water and exercise help.">
+<title>The Sugar and Ketone Storybook</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap">
+<style>
+/* Layout: one storybook "page" card centred on a soft sky background, picture on top, story text, a check question, then a pop quiz overlay before turning the page. */
+:root{
+  --bg:#e9f4fb; --paper:#ffffff; --ink:#1f2a44; --muted:#5b6782;
+  --sun:#ffcf4a; --sky:#3b9ddd; --coral:#ff6f61; --leaf:#3cb371; --line:#d5e3ef;
+  --display:"Fredoka","Nunito",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1a2b; --paper:#19263a; --ink:#f1f5fb; --muted:#aab6cc; --sun:#ffd766; --sky:#63b4ec; --coral:#ff8a7e; --leaf:#5ccf8a; --line:#2d3d57; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f1a2b; --paper:#19263a; --ink:#f1f5fb; --muted:#aab6cc; --sun:#ffd766; --sky:#63b4ec; --coral:#ff8a7e; --leaf:#5ccf8a; --line:#2d3d57; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.top .title{font-family:var(--display);font-weight:700;font-size:1.1rem}
+.score{font-family:var(--display);font-weight:600;background:var(--sun);color:#3a2d00;border-radius:999px;padding:4px 14px;font-variant-numeric:tabular-nums}
+.progress{display:flex;gap:6px}
+.progress i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.progress i.done{background:var(--leaf)} .progress i.now{background:var(--sky)}
+
+.page{background:var(--paper);border-radius:22px;border:3px solid var(--line);overflow:hidden;box-shadow:0 10px 30px rgba(20,40,80,.10)}
+.pic{background:var(--bg);display:flex;justify-content:center}
+.pic img{max-width:100%;max-height:300px;display:block}
+.body{padding:22px;display:flex;flex-direction:column;gap:14px}
+.pagenum{font-family:var(--display);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
+.body h2{font-size:1.7rem}
+.body p{margin:0;max-width:62ch}
+.big{font-family:var(--display);font-size:1.25rem;color:var(--sky)}
+.signs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;list-style:none;padding:0;margin:0}
+.signs li{border:2px solid var(--line);border-radius:14px;padding:10px;font-size:.95rem}
+.signs li b{display:block;font-family:var(--display);font-size:1.6rem;line-height:1}
+.signs li.red{border-color:var(--coral)}
+.chain{display:flex;flex-direction:column;gap:6px;list-style:none;padding:0;margin:0;counter-reset:s}
+.chain li{display:flex;gap:12px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 12px}
+.chain li::before{counter-increment:s;content:counter(s);font-family:var(--display);font-weight:700;background:var(--sky);color:#fff;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;flex:none}
+.chain li.last{border-color:var(--coral)} .chain li.last::before{background:var(--coral)}
+.plan{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.plan label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.plan input{width:22px;height:22px;margin-top:3px;accent-color:var(--leaf)}
+
+.check{border:3px dashed var(--sky);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.check h3{font-size:1.1rem;color:var(--sky)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;font:inherit;font-weight:700;background:var(--bg);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.opt:hover{border-color:var(--sky)} .opt:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.opt.right{border-color:var(--leaf);background:color-mix(in srgb,var(--leaf) 18%,var(--paper))}
+.opt.wrong{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 18%,var(--paper))}
+.opt[disabled]{cursor:default}
+.feedback{font-weight:700;min-height:1.4em}
+.feedback.ok{color:var(--leaf)} .feedback.no{color:var(--coral)}
+
+.nav{display:flex;justify-content:space-between;gap:10px;padding:0 22px 22px}
+.btn{font-family:var(--display);font-weight:600;font-size:1.05rem;border:0;border-radius:999px;padding:12px 22px;cursor:pointer;color:#fff;background:var(--sky)}
+.btn.ghost{background:transparent;color:var(--muted);border:2px solid var(--line)}
+.btn.sun{background:var(--sun);color:#3a2d00}
+.btn:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+.pop{position:fixed;inset:0;background:rgba(10,20,40,.55);display:grid;place-items:center;padding:16px;z-index:20}
+.pop .card{background:var(--paper);border:4px solid var(--coral);border-radius:22px;padding:22px;max-width:480px;width:100%;display:flex;flex-direction:column;gap:12px;animation:pop .35s ease-out}
+.pop h3{font-size:1.5rem;color:var(--coral)}
+.tf{display:flex;gap:10px}
+.tf .opt{flex:1;text-align:center;font-size:1.1rem}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){.pop .card{animation:none}}
+
+.cover .body{text-align:center;align-items:center}
+.cover h1{font-size:2.3rem}
+.end .stars{font-size:2.6rem;letter-spacing:.1em}
+.note{font-size:.9rem;color:var(--muted)}
+</style>
+<style>img{max-width:100%} [hidden]{display:none!important} html,body{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="title">The Sugar and Ketone Storybook</span>
+    <span class="score" id="score">0 points</span>
+  </div>
+  <div class="progress" id="progress"></div>
+  <div id="book"></div>
+</div>
+
+<div id="popHost"></div>
+
+<script>
+const pages = [
+ {cover:true, img:"img/helpers.png", title:"The Sugar and Ketone Storybook",
+  text:["A story about what happens inside you when sugar gets too high, and the three helpers who put it right.","On every page there is a question to check you understood, and a pop quiz before you can turn the page. Collect points as you go!"]},
+
+ {img:"img/key.png", title:"The locked doors",
+  text:["Your body is made of billions of tiny cells. Your muscles, your brain, even your toes are cells. Cells need fuel, and their favourite fuel is sugar.","When you eat, the food turns into sugar and travels around in your blood, like a delivery truck. But every cell has a locked door. Sugar cannot get in by itself.","Insulin is the key. It unlocks the door so the sugar can go inside and give the cell energy. With type 1 diabetes, the insulin factory in your body (the pancreas) has stopped. Nothing you ate caused it. You just bring your own keys, with a pen or a pump."],
+  q:{ask:"What does insulin do?",opts:["Makes sugar taste sweeter","Unlocks the cell doors so sugar can get in","Turns sugar into fat"],a:1,why:"Insulin is the key. Without it, sugar stays outside the cells."},
+  pop:{ask:"True or false: with type 1 diabetes, eating too much candy stopped the pancreas.",a:false,why:"False. Type 1 is not caused by anything you ate. The insulin factory stopped on its own."}},
+
+ {img:"img/signs.png", title:"Sugar stuck outside",
+  text:["One day there is not enough insulin. Maybe a dose was missed, or the pump stopped, or you are sick and your body needs more than usual.","Now the sugar cannot get into the cells. It stays in the blood and piles up. That is what high blood sugar means: too much sugar in the truck, not enough delivered.","Your body tries to fix it by pushing sugar out in your pee. But sugar drags water out with it. So you pee a lot, you feel super thirsty, and you feel tired and grumpy because the cells still have no fuel."],
+  q:{ask:"Why does high sugar make you pee a lot and feel thirsty?",opts:["Sugar leaves in your pee and drags water out with it","Sugar makes your bladder bigger","It does not, that is a myth"],a:0,why:"Your kidneys push the sugar out, and water goes with it. That is why you get dehydrated."},
+  pop:{ask:"True or false: when you have high blood sugar, your cells are full of sugar.",a:false,why:"False. The sugar is stuck in the blood. The cells are actually hungry."}},
+
+ {img:"img/hungry.png", title:"Hungry cells and smoky ketones",
+  text:["Here is the strange part. The blood is full of sugar, but the cells are starving, because none of it can get in. The cells shout: \"We are hungry! Send fuel!\"","So the body switches to its emergency backup plan: it starts burning fat for fuel. That leaves behind a waste product called ketones. A little is normal, like a little smoke from a campfire.","But the fire keeps burning and the smoke keeps building. Ketones are acid. When too many pile up, your blood becomes more acidic than it should be. That is DKA: diabetic ketoacidosis. Keto means ketones, acidosis means too much acid."],
+  q:{ask:"What are ketones?",opts:["A type of vitamin","Tiny bubbles of sugar","Acidic leftovers from burning fat for fuel"],a:2,why:"Ketones are the acidic smoke from burning fat when cells cannot get sugar."},
+  pop:{ask:"True or false: the body burns fat because the cells cannot get sugar.",a:true,why:"True. Hungry cells make the body switch to its backup fuel, and that makes ketones."}},
+
+ {title:"The chain reaction", chain:true,
+  text:["Each step pushes the next one. The earlier you stop the chain, the easier it is. Insulin breaks it at step 1."],
+  q:{ask:"Where does the chain start?",opts:["With ketones piling up","With not enough insulin","With drinking too much water"],a:1,why:"Missing insulin is step 1. Everything else follows from it."},
+  pop:{ask:"True or false: ketones can show up even when your sugar is not sky-high, for example when you are sick or your pump stops.",a:true,why:"True. That is why you check for ketones, not just sugar, when you feel unwell."}},
+
+ {title:"Your body's secret code", signs:true,
+  text:["Your body sends messages. Learning them is like learning a secret code. The yellow ones mean check your sugar and ketones. The red ones mean tell a grown-up right now."],
+  q:{ask:"Which sign means tell a grown-up right now?",opts:["Fruity-smelling breath and throwing up","Feeling a little thirsty","Wanting a snack"],a:0,why:"Fruity breath, vomiting, fast breathing or being very sleepy are emergency signs."},
+  pop:{ask:"True or false: if you feel sick and cannot keep water down, you should wait and see what your meter says first.",a:false,why:"False. Not keeping water down is always a tell-a-grown-up moment, whatever the number."}},
+
+ {img:"img/helpers.png", title:"Helper 1: Insulin the firefighter",
+  text:["Three helpers come to the rescue. The first and most important is insulin.","As soon as insulin is back, the doors open, sugar goes in, the cells stop being hungry, and the body stops burning fat. No more fire means no more smoke. The ketones already there get washed out over the next few hours.","That is why you never skip insulin, even when you are sick and not eating. Being sick usually means your body needs more insulin, not less. If you use a pump and sugar will not come down, a grown-up checks the site and tubing."],
+  q:{ask:"Which helper is the only one that can truly stop DKA?",opts:["Water","Exercise","Insulin"],a:2,why:"Only insulin fixes step 1 of the chain. The others are helpers."},
+  pop:{ask:"True or false: when you are sick and not eating, you can skip your insulin.",a:false,why:"False. Being sick usually means you need more insulin. Follow your sick-day plan."}},
+
+ {img:"img/water.png", title:"Helper 2: Water the bucket brigade",
+  text:["Remember all the water you lost from peeing? Water puts it back. Drinking water stops you getting weak and dizzy, and it helps your kidneys flush extra sugar and ketones out. More water in means more ketones out.","Sip steadily, about a cup every half hour, instead of gulping. Choose water or sugar-free drinks. Juice and soda add more sugar to a river that already has too much.","Water cannot fix the missing insulin, but it buys time and helps insulin work better. Firefighter plus bucket brigade."],
+  q:{ask:"When your sugar is high with ketones, which drink is best?",opts:["Orange juice","Water or a sugar-free drink","A fizzy soda"],a:1,why:"Juice and soda add sugar. Water helps flush ketones out."},
+  pop:{ask:"True or false: water alone can stop DKA.",a:false,why:"False. Water helps a lot, but only insulin stops the body making ketones."}},
+
+ {img:"img/exercise.png", title:"Helper 3: Exercise and the one big rule",
+  text:["When you run, bike or play, your muscles get hungry and pull sugar out of the blood. That is why exercise often brings a high sugar down and why being active every day helps insulin work better.","But there is one big rule: do not exercise when you have ketones.","Exercise makes your muscles ask for more fuel. With no insulin, the body answers by burning even more fat, making even more ketones. So the order is always: high sugar? Check ketones first. No ketones and you feel fine? Playing is okay. Ketones? Rest, insulin, water, tell a grown-up."],
+  q:{ask:"Your sugar is high AND you have ketones. What about sport?",opts:["Run around to burn the sugar off","Do half the usual amount","Rest, insulin, water, tell a grown-up. No sport until ketones are gone"],a:2,why:"Exercising with ketones makes more ketones. Rest and insulin first."},
+  pop:{ask:"True or false: with no ketones, gentle exercise can help bring a high sugar down.",a:true,why:"True. Moving muscles pull sugar out of the blood. Just check for ketones first."}},
+
+ {title:"Your safety plan", plan:true,
+  text:["Most of the time, catching ketones early means a dose of insulin, some water and a few hours of rest, and the whole thing is over. Knowing the plan is what keeps it small. Tick these with a grown-up."],
+  q:{ask:"You have ketones but feel okay. What do you do?",opts:["Keep it to yourself since you feel fine","Tell a grown-up straight away","Go play football"],a:1,why:"Ketones are always a tell-a-grown-up moment, even if you feel fine."},
+  pop:{ask:"True or false: after a correction dose you should check sugar and ketones again every 2 hours until they are normal.",a:true,why:"True. Keep checking until the ketones are gone."}},
+
+ {end:true, img:"img/detective.png", title:"You are a DKA detective!",
+  text:["You now know the whole story: locked doors, sugar stuck outside, hungry cells, smoky ketones, and the three helpers who fix it.","This storybook explains how things work. Your doctor and diabetes nurse's plan always comes first if it says something different."]}
+];
+
+const signs = [
+ {i:"💧",t:"Very thirsty",d:"Could drink a whole bottle and still want more"},
+ {i:"🚽",t:"Peeing a lot",d:"Again and again, even at night"},
+ {i:"😴",t:"Tired and grumpy",d:"Everything feels like too much effort"},
+ {i:"🤢",t:"Tummy ache or throwing up",d:"Ketones are building up",red:true},
+ {i:"🍐",t:"Fruity breath",d:"Smells like pear drops or nail polish",red:true},
+ {i:"😮‍💨",t:"Fast, deep breathing",d:"Body trying to blow off acid",red:true},
+ {i:"😵",t:"Confused or very sleepy",d:"Emergency: call for help now",red:true}
+];
+const chain = ["Not enough insulin","Sugar gets stuck in the blood","Cells get hungry","The body burns fat instead","Ketones pile up","DKA: the blood turns too acidic"];
+const plan = ["My sugar is high or I feel sick: I check for ketones.","I have ketones: I tell a grown-up straight away.","I take my insulin the way my sick-day plan says. I never skip it.","I sip water every 30 minutes until the ketones are gone.","I rest. No sport until my ketones are gone.","If I am throwing up, breathing fast or very sleepy, a grown-up calls for help right now."];
+
+let state = {page:0, score:0, done:{}};
+try{ const s=JSON.parse(localStorage.getItem("dka-storybook")||"null"); if(s&&typeof s.page==="number") state=s; }catch(e){}
+function save(){ try{ localStorage.setItem("dka-storybook",JSON.stringify(state)); }catch(e){} }
+const maxPoints = pages.reduce((n,p)=>n+(p.q?1:0)+(p.pop?1:0),0);
+
+const book=document.getElementById("book"), progress=document.getElementById("progress"), scoreEl=document.getElementById("score"), popHost=document.getElementById("popHost");
+
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function render(){
+  const i=state.page, p=pages[i];
+  scoreEl.textContent=`${state.score} / ${maxPoints} points`;
+  progress.innerHTML=pages.map((_,k)=>`<i class="${k<i?"done":k===i?"now":""}"></i>`).join("");
+  const checkDone = state.done["q"+i];
+  let h=`<article class="page ${p.cover?"cover":""} ${p.end?"end":""}">`;
+  if(p.img) h+=`<div class="pic"><img src="${p.img}" alt="${esc(p.title)}"></div>`;
+  h+=`<div class="body"><div class="pagenum">${p.cover?"Cover":p.end?"The end":"Page "+i+" of "+(pages.length-2)}</div>`;
+  h+= p.cover?`<h1>${esc(p.title)}</h1>`:`<h2>${esc(p.title)}</h2>`;
+  if(p.end) h+=`<div class="stars">${"⭐".repeat(Math.max(1,Math.round(state.score/maxPoints*5)))}</div><p class="big">You scored ${state.score} out of ${maxPoints} points.</p>`;
+  h+=p.text.map(t=>`<p>${esc(t)}</p>`).join("");
+  if(p.chain) h+=`<ol class="chain">${chain.map((c,k)=>`<li class="${k===chain.length-1?"last":""}">${esc(c)}</li>`).join("")}</ol>`;
+  if(p.signs) h+=`<ul class="signs">${signs.map(s=>`<li class="${s.red?"red":""}"><b>${s.i}</b><strong>${esc(s.t)}</strong><br>${esc(s.d)}</li>`).join("")}</ul>`;
+  if(p.plan) h+=`<ul class="plan">${plan.map((t,k)=>`<li><label><input type="checkbox" id="plan${k}"> ${esc(t)}</label></li>`).join("")}</ul>`;
+  if(p.q){
+    h+=`<div class="check"><h3>Check you understood</h3><p><strong>${esc(p.q.ask)}</strong></p><div class="opts">`+
+      p.q.opts.map((o,k)=>`<button class="opt ${checkDone?(k===p.q.a?"right":""):""}" data-k="${k}" ${checkDone?"disabled":""}>${esc(o)}</button>`).join("")+
+      `</div><div class="feedback ${checkDone?"ok":""}" id="fb">${checkDone?"Correct! "+esc(p.q.why):""}</div></div>`;
+  }
+  h+=`</div><div class="nav">`;
+  h+= i>0?`<button class="btn ghost" id="prev">Back</button>`:`<span></span>`;
+  if(p.end) h+=`<button class="btn sun" id="restart">Read it again</button>`;
+  else h+=`<button class="btn ${p.cover?"sun":""}" id="next" ${p.q&&!checkDone?"disabled":""}>${p.cover?"Open the book":"Next page"}</button>`;
+  h+=`</div></article>`;
+  book.innerHTML=h;
+  if(p.q&&!checkDone) book.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>answer(i,+b.dataset.k)));
+  const prev=document.getElementById("prev"); if(prev) prev.onclick=()=>{state.page=i-1;save();render();window.scrollTo({top:0});};
+  const next=document.getElementById("next"); if(next) next.onclick=()=>{ if(p.pop&&!state.done["pop"+i]) popQuiz(i); else turn(i); };
+  const rs=document.getElementById("restart"); if(rs) rs.onclick=()=>{state={page:0,score:0,done:{}};save();render();};
+}
+function answer(i,k){
+  const p=pages[i], fb=document.getElementById("fb"), btns=book.querySelectorAll(".opt");
+  if(k===p.q.a){
+    btns.forEach(b=>{b.disabled=true; if(+b.dataset.k===k)b.classList.add("right");});
+    fb.className="feedback ok"; fb.textContent="Correct! "+p.q.why;
+    if(!state.done["q"+i]){state.score++;state.done["q"+i]=true;save();}
+    scoreEl.textContent=`${state.score} / ${maxPoints} points`;
+    document.getElementById("next").disabled=false;
+  } else {
+    btns[k].classList.add("wrong"); btns[k].disabled=true;
+    fb.className="feedback no"; fb.textContent="Not quite. Read the page again and try another answer.";
+  }
+}
+function popQuiz(i){
+  const p=pages[i];
+  popHost.innerHTML=`<div class="pop" role="dialog" aria-labelledby="popTitle"><div class="card"><h3 id="popTitle">Pop quiz!</h3><p><strong>${esc(p.pop.ask)}</strong></p><div class="tf"><button class="opt" data-v="true">True</button><button class="opt" data-v="false">False</button></div><div class="feedback" id="popFb"></div><div id="popGo"></div></div></div>`;
+  popHost.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const v=b.dataset.v==="true", ok=v===p.pop.a, fb=document.getElementById("popFb");
+    popHost.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+    b.classList.add(ok?"right":"wrong");
+    fb.className="feedback "+(ok?"ok":"no"); fb.textContent=(ok?"Yes! ":"Not this time. ")+p.pop.why;
+    if(ok&&!state.done["pop"+i]) state.score++;
+    state.done["pop"+i]=true; save();
+    document.getElementById("popGo").innerHTML=`<button class="btn" id="popNext">Turn the page</button>`;
+    document.getElementById("popNext").onclick=()=>{popHost.innerHTML="";turn(i);};
+    document.getElementById("popNext").focus();
+  }));
+  popHost.querySelector(".opt").focus();
+}
+function turn(i){ state.page=Math.min(i+1,pages.length-1); save(); render(); window.scrollTo({top:0}); }
+render();
+</script>
+</body>
+</html>
