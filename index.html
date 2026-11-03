@@ -97,20 +97,20 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
 
 <script>
 const pages = [
- {cover:true, img:"img/helpers.png", title:"The Sugar and Ketone Storybook",
+ {cover:true, img:"img/helpers.jpg", title:"The Sugar and Ketone Storybook",
   text:["A story about what happens inside you when sugar gets too high, and the three helpers who put it right.","On every page there is a question to check you understood, and a pop quiz before you can turn the page. Collect points as you go!"]},
 
- {img:"img/key.png", title:"The locked doors",
+ {img:"img/key.jpg", title:"The locked doors",
   text:["Your body is made of billions of tiny cells. Your muscles, your brain, even your toes are cells. Cells need fuel, and their favourite fuel is sugar.","When you eat, the food turns into sugar and travels around in your blood, like a delivery truck. But every cell has a locked door. Sugar cannot get in by itself.","Insulin is the key. It unlocks the door so the sugar can go inside and give the cell energy. With type 1 diabetes, the insulin factory in your body (the pancreas) has stopped. Nothing you ate caused it. You just bring your own keys, with a pen or a pump."],
   q:{ask:"What does insulin do?",opts:["Makes sugar taste sweeter","Unlocks the cell doors so sugar can get in","Turns sugar into fat"],a:1,why:"Insulin is the key. Without it, sugar stays outside the cells."},
   pop:{ask:"True or false: with type 1 diabetes, eating too much candy stopped the pancreas.",a:false,why:"False. Type 1 is not caused by anything you ate. The insulin factory stopped on its own."}},
 
- {img:"img/signs.png", title:"Sugar stuck outside",
+ {img:"img/signs.jpg", title:"Sugar stuck outside",
   text:["One day there is not enough insulin. Maybe a dose was missed, or the pump stopped, or you are sick and your body needs more than usual.","Now the sugar cannot get into the cells. It stays in the blood and piles up. That is what high blood sugar means: too much sugar in the truck, not enough delivered.","Your body tries to fix it by pushing sugar out in your pee. But sugar drags water out with it. So you pee a lot, you feel super thirsty, and you feel tired and grumpy because the cells still have no fuel."],
   q:{ask:"Why does high sugar make you pee a lot and feel thirsty?",opts:["Sugar leaves in your pee and drags water out with it","Sugar makes your bladder bigger","It does not, that is a myth"],a:0,why:"Your kidneys push the sugar out, and water goes with it. That is why you get dehydrated."},
   pop:{ask:"True or false: when you have high blood sugar, your cells are full of sugar.",a:false,why:"False. The sugar is stuck in the blood. The cells are actually hungry."}},
 
- {img:"img/hungry.png", title:"Hungry cells and smoky ketones",
+ {img:"img/hungry.jpg", title:"Hungry cells and smoky ketones",
   text:["Here is the strange part. The blood is full of sugar, but the cells are starving, because none of it can get in. The cells shout: \"We are hungry! Send fuel!\"","So the body switches to its emergency backup plan: it starts burning fat for fuel. That leaves behind a waste product called ketones. A little is normal, like a little smoke from a campfire.","But the fire keeps burning and the smoke keeps building. Ketones are acid. When too many pile up, your blood becomes more acidic than it should be. That is DKA: diabetic ketoacidosis. Keto means ketones, acidosis means too much acid."],
   q:{ask:"What are ketones?",opts:["A type of vitamin","Tiny bubbles of sugar","Acidic leftovers from burning fat for fuel"],a:2,why:"Ketones are the acidic smoke from burning fat when cells cannot get sugar."},
   pop:{ask:"True or false: the body burns fat because the cells cannot get sugar.",a:true,why:"True. Hungry cells make the body switch to its backup fuel, and that makes ketones."}},
@@ -125,17 +125,17 @@ const pages = [
   q:{ask:"Which sign means tell a grown-up right now?",opts:["Fruity-smelling breath and throwing up","Feeling a little thirsty","Wanting a snack"],a:0,why:"Fruity breath, vomiting, fast breathing or being very sleepy are emergency signs."},
   pop:{ask:"True or false: if you feel sick and cannot keep water down, you should wait and see what your meter says first.",a:false,why:"False. Not keeping water down is always a tell-a-grown-up moment, whatever the number."}},
 
- {img:"img/helpers.png", title:"Helper 1: Insulin the firefighter",
+ {img:"img/helpers.jpg", title:"Helper 1: Insulin the firefighter",
   text:["Three helpers come to the rescue. The first and most important is insulin.","As soon as insulin is back, the doors open, sugar goes in, the cells stop being hungry, and the body stops burning fat. No more fire means no more smoke. The ketones already there get washed out over the next few hours.","That is why you never skip insulin, even when you are sick and not eating. Being sick usually means your body needs more insulin, not less. If you use a pump and sugar will not come down, a grown-up checks the site and tubing."],
   q:{ask:"Which helper is the only one that can truly stop DKA?",opts:["Water","Exercise","Insulin"],a:2,why:"Only insulin fixes step 1 of the chain. The others are helpers."},
   pop:{ask:"True or false: when you are sick and not eating, you can skip your insulin.",a:false,why:"False. Being sick usually means you need more insulin. Follow your sick-day plan."}},
 
- {img:"img/water.png", title:"Helper 2: Water the bucket brigade",
+ {img:"img/water.jpg", title:"Helper 2: Water the bucket brigade",
   text:["Remember all the water you lost from peeing? Water puts it back. Drinking water stops you getting weak and dizzy, and it helps your kidneys flush extra sugar and ketones out. More water in means more ketones out.","Sip steadily, about a cup every half hour, instead of gulping. Choose water or sugar-free drinks. Juice and soda add more sugar to a river that already has too much.","Water cannot fix the missing insulin, but it buys time and helps insulin work better. Firefighter plus bucket brigade."],
   q:{ask:"When your sugar is high with ketones, which drink is best?",opts:["Orange juice","Water or a sugar-free drink","A fizzy soda"],a:1,why:"Juice and soda add sugar. Water helps flush ketones out."},
   pop:{ask:"True or false: water alone can stop DKA.",a:false,why:"False. Water helps a lot, but only insulin stops the body making ketones."}},
 
- {img:"img/exercise.png", title:"Helper 3: Exercise and the one big rule",
+ {img:"img/exercise.jpg", title:"Helper 3: Exercise and the one big rule",
   text:["When you run, bike or play, your muscles get hungry and pull sugar out of the blood. That is why exercise often brings a high sugar down and why being active every day helps insulin work better.","But there is one big rule: do not exercise when you have ketones.","Exercise makes your muscles ask for more fuel. With no insulin, the body answers by burning even more fat, making even more ketones. So the order is always: high sugar? Check ketones first. No ketones and you feel fine? Playing is okay. Ketones? Rest, insulin, water, tell a grown-up."],
   q:{ask:"Your sugar is high AND you have ketones. What about sport?",opts:["Run around to burn the sugar off","Do half the usual amount","Rest, insulin, water, tell a grown-up. No sport until ketones are gone"],a:2,why:"Exercising with ketones makes more ketones. Rest and insulin first."},
   pop:{ask:"True or false: with no ketones, gentle exercise can help bring a high sugar down.",a:true,why:"True. Moving muscles pull sugar out of the blood. Just check for ketones first."}},
@@ -145,7 +145,7 @@ const pages = [
   q:{ask:"You have ketones but feel okay. What do you do?",opts:["Keep it to yourself since you feel fine","Tell a grown-up straight away","Go play football"],a:1,why:"Ketones are always a tell-a-grown-up moment, even if you feel fine."},
   pop:{ask:"True or false: after a correction dose you should check sugar and ketones again every 2 hours until they are normal.",a:true,why:"True. Keep checking until the ketones are gone."}},
 
- {end:true, img:"img/detective.png", title:"You are a DKA detective!",
+ {end:true, img:"img/detective.jpg", title:"You are a DKA detective!",
   text:["You now know the whole story: locked doors, sugar stuck outside, hungry cells, smoky ketones, and the three helpers who fix it.","This storybook explains how things work. Your doctor and diabetes nurse's plan always comes first if it says something different."]}
 ];
 
